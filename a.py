@@ -1,6 +1,6 @@
 
 
 def sayHi():
-	print("hi git")
+	print("hello git")
 
 sayHi()
