@@ -1,0 +1,17 @@
+git init
+git remote ~~~
+git add filename
+git commit -m ""
+git push
+
+git pull
+
+git status
+git diff  # dif pulled file and local file
+git log  #commit history
+
+git checkout -b ~~
+
+
+
+
