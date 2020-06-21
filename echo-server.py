@@ -1,83 +1,64 @@
 import socket
-from commandParser import CommandParser
-import macro
-
 
 IP = '127.0.0.1'  # 로컬 호스트넘버
 S_PORT = 7777  # 임의의 포트넘버
 
 client_queue = []
-command_parser = CommandParser()
-
 
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP타입 소켓객체 생성
 serverSocket.bind((IP, S_PORT))  # 소켓을호스트와 포트넘버에 연결
 serverSocket.listen(1)  # 클라이언트의 접속 허용
 
-
-def removeClient(ip, port):
+## queue에서 정보를 삭제하는 메소드
+def removeClient(ip, chatRoom_Num):
 
     for i, client in enumerate(client_queue):
-        if client[0] == ip and client[1] == port:
+        if client[0] == ip and client[1] == chatRoom_Num:
             client_queue.pop(i)
-            print("{}th client removed!!".format(i))
+            print("\n유저 정보가 삭제되었습니다.\n".format(i))
             return True
-    print("No such client!! {}::{}".format(ip, port))
+
+    print("No such client!! {}::{}".format(ip, chatRoom_Num))
+
     return False
 
-
-
-
-def debugPrint(message):
-    print("[SERVER_DEBUG]: {}".format(message))
-
-
-def handleCommand(command, clinet_socket, client_ip, client_port):
-    debugPrint("::handleCommand::")
-    debugPrint(command)
+## 클라이언트로부터 받은 요청을 수행하는 메소드
+def handleCommand(command, clinet_socket, client_ip, chatRoom_Num):
 
     if command == '1':
-        client_server_info = eval(clinet_socket.recv(1024).decode())
-        client_queue.append([client_ip, client_port, clinet_socket, client_server_info])
+
+        client_queue.append([client_ip, chatRoom_Num])
+        print("채팅방 목록에 {}::{} 가 추가되었습니다.\n".format(client_ip, chatRoom_Num))
 
     elif command == '2':
-        debugPrint("online_users")
-        clinet_socket.sendall(str(
-            [element[3] for element in client_queue]).encode())
+
+        clinet_socket.sendall(str(client_queue).encode())
+        print("\n채팅방 목록을 보냈습니다\n")
 
     elif command == '3':
-        debugPrint("logoff command")
-        print(client_queue)
-        removeClient(client_ip, client_port)
-        print(client_queue)
+
+        print("삭제 전 : {} \n".format(client_queue))
+        removeClient(client_ip, chatRoom_Num)
+        print("삭제 후 : {} \n".format(client_queue))
 
     else:
-        debugPrint("[CommandNotFoundError]")
-        clinet_socket.sendall(command.encode())
+
+        print("\n[CommandNotFoundError]\n")
+        clinet_socket.sendall("메뉴 다시 선택해라.".encode())
 
 
 while True:
+
     print("[Server] waiting for client...")
-    clientSocket, address = serverSocket.accept()  # 클라이언트 접속시 새로운 소켓 생성
-    print(address, "가 접속하였습니다.")
 
+    clientSocket, address = serverSocket.accept()  # 클라이언트 접속
 
-    client_ip, client_port = address[0], address[1]
+    client_ip, chatRoom_Num = address[0], clientSocket.recv(4).decode() # 클라이언트로부터 채팅방 번호 받기
+    command = clientSocket.recv(1).decode() # 클라이언트로부터 command 받기
 
+    handleCommand(command, clientSocket, client_ip, chatRoom_Num)
 
-    message = clientSocket.recv(1)  # 클라이언트로부터 메시지를 받아 message에 저장
-    decodeed_message = message.decode()
-
-    print("before handle command")
-    handleCommand(decodeed_message, clientSocket, client_ip, client_port)
-    print("after  handle command")
     clientSocket.close()
-    if decodeed_message == 'logoff':
-        print("[Server]: logging off...!!!!!")
-        break
-    # message는 현재 String타입이기때문에 다시
-    # bytes타입으로 incode시킨 후에 client에게 send back
-    print('메시지를 보냈습니다.')
 
 
 serverSocket.close()
