@@ -1,4 +1,3 @@
-import macro
 
 
 class CommandParser():
