@@ -9,13 +9,13 @@
 #### Program 실행 설명
 ---------------
 -서버 파일 실행
-₩₩₩ C
+``` C
 $ python3 echo-server.py
-₩₩₩
+```
 -클라이언트 파일 실행
-₩₩₩ C
+``` C
 $ python3 echo-client [자신이 개설할 채팅방 번호]
-₩₩₩
+```
 #### Program 기능 설명
 ---------------
 1. help
@@ -32,8 +32,9 @@ $ python3 echo-client [자신이 개설할 채팅방 번호]
   - 채팅이 끝나고 채팅방 방장은 서버에게
     자신의 채팅방 번호를 목록에서 지울것을 요청한다
 5. connect to Chat Room
-  ''' C
+  ``` C
   connect [ip] [Chat Room Number]
+  ```
   - 채팅방에 입장하여 채팅을 시작한다
   - /quit 을 입력하면 채팅을 종료한다
 6. quit
