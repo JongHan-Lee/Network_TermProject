@@ -19,7 +19,6 @@ def removeClient(ip, port):
 
     for i, client in enumerate(client_queue):
         if client[0] == ip and client[1] == port:
-            client_queue[i][2].close()
             client_queue.pop(i)
             print("{}th client removed!!".format(i))
             return True
@@ -66,7 +65,7 @@ while True:
     client_ip, client_port = address[0], address[1]
 
 
-    message = clientSocket.recv(1024)  # 클라이언트로부터 메시지를 받아 message에 저장
+    message = clientSocket.recv(1)  # 클라이언트로부터 메시지를 받아 message에 저장
     decodeed_message = message.decode()
 
     print("before handle command")

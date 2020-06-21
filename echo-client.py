@@ -10,13 +10,16 @@ parser = CommandParser()
 
 print("Chat port: {}".format(CHAT_SERVER_PORT))
 
-clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP타입 소켓 객체 생성
+
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP타입 소켓객체 생성
 serverSocket.bind((IP, CHAT_SERVER_PORT))  # 소켓을호스트와 포트넘버에 연결
 
 # serverSocket.listen(1)  # 클라이언트의 접속 허용
 
 while True:
+
+    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # TCP타입 소켓 객체 생성
+
     option = input("선택하세요 >> (1) 로그인 & 챗 대기 모드, (2) user_infos, (3) logoff, (4) connect):")
 
     if option == "1":
@@ -78,7 +81,7 @@ while True:
         infos = input("write: connect [ip] [port]")
         _, user_ip, user_port = parser.parse(infos)
 
-        clientSocket.connect((user_ip, eval(user_port)))
+        clientSocket.connect((user_ip, int(user_port)))
         clientSocket.sendall("hello from other side".encode())
         response = clientSocket.recv(1024).decode()
         print("[FROM OTHER USRR:{}::{}]: {}".format(user_ip
