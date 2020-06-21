@@ -1,12 +1,12 @@
-#P2P Chat Program
+# P2P Chat Program
 ---------------
-##Program 설명
+## Program 설명
 >Napster 스타일 p2p 1:1 채팅 프로그램입니다.
 >클라이언트들은 서버에 연결 가능한 채팅방 목록을
 >요청하고 원하는 채팅방에 입장하여 상대방과 자유
 >롭게 채팅을 진행합니다.
 
-##Program 실행 설명
+## Program 실행 설명
 ---------------
 -서버 파일 실행
 ''' C
@@ -16,7 +16,7 @@ $ python3 echo-server.py
 ''' C
 $ python3 echo-client [자신이 개설할 채팅방 번호]
 '''
-##Program 기능 설명
+## Program 기능 설명
 ---------------
 1. help
   - 명령어 목록을 출력해주는 기능
