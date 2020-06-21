@@ -36,37 +36,25 @@ def debugPrint(message):
 def handleCommand(command, clinet_socket, client_ip, client_port):
     debugPrint("::handleCommand::")
     debugPrint(command)
-    result = command_parser.parse(command)
 
-    if result[0] == macro.CONNECT_COMMAND:
-        """
-        result[1] = ip
-        result[2] = port
-        """
+    if command == '1':
+        client_server_info = eval(clinet_socket.recv(1024).decode())
+        client_queue.append([client_ip, client_port, clinet_socket, client_server_info])
 
-    elif result[0] == macro.TALK_COMMAND:
-        """
-        result[1] = message
-        """
-        pass
+    elif command == '2':
+        debugPrint("online_users")
+        clinet_socket.sendall(str(
+            [element[3] for element in client_queue]).encode())
+
+    elif command == '3':
+        debugPrint("logoff command")
+        print(client_queue)
+        removeClient(client_ip, client_port)
+        print(client_queue)
+
     else:
-        if command == 'help':
-            debugPrint("help command")
-            clinet_socket.sendall("help help".encode())
-        elif command == 'online_users':
-            debugPrint("online_users")
-            clinet_socket.sendall(str(
-                [element[3] for element in client_queue]).encode())
-        elif command == 'logoff':
-            debugPrint("logoff command")
-            print(client_queue)
-            removeClient(client_ip, client_port)
-            print(client_queue)
-            # clinet_socket.sendall("logoff".encode())
-
-        else:
-            debugPrint("[CommandNotFoundError]")
-            clinet_socket.sendall(command.encode())
+        debugPrint("[CommandNotFoundError]")
+        clinet_socket.sendall(command.encode())
 
 
 while True:
@@ -74,9 +62,9 @@ while True:
     clientSocket, address = serverSocket.accept()  # 클라이언트 접속시 새로운 소켓 생성
     print(address, "가 접속하였습니다.")
 
-    client_server_info = eval(clientSocket.recv(1024).decode())
+
     client_ip, client_port = address[0], address[1]
-    client_queue.append([client_ip, client_port, clientSocket, client_server_info])
+
 
     message = clientSocket.recv(1024)  # 클라이언트로부터 메시지를 받아 message에 저장
     decodeed_message = message.decode()

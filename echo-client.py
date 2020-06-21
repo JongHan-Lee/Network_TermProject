@@ -20,8 +20,10 @@ while True:
     option = input("선택하세요 >> (1) 로그인 & 챗 대기 모드, (2) user_infos, (3) logoff, (4) connect):")
 
     if option == "1":
-        print("레지서버에 등록")
+
         clientSocket.connect((IP, S_PORT))  # 서버 접속
+        print("서버에 연결되었습니다.")
+        clientSocket.sendall(option.encode())
         clientSocket.sendall(str(
             {
                 "ip": IP,
@@ -56,15 +58,10 @@ while True:
 
     elif option == "2":
         clientSocket.connect((IP, S_PORT))  # 서버 접속
-        # clientSocket.sendall(str(
-        #     {
-        #         "ip": IP,
-        #         "port": CHAT_SERVER_PORT
-        #     }
-        # ).encode())
+
         print("서버에 연결되었습니다")
 
-        clientSocket.sendall("online_users".encode()) #String타입 메시지를 bytes타입으로 encode하여 서버로 send
+        clientSocket.sendall(option.encode()) #String타입 메시지를 bytes타입으로 encode하여 서버로 send
         print("서버로 메시지를 전송하였습니다")
 
         data = clientSocket.recv(1024)
@@ -75,7 +72,7 @@ while True:
 
         clientSocket.connect((IP, S_PORT))  # 서버 접속
         print("서버에 연결되었습니다")
-        clientSocket.sendall("logoff".encode())  # String타입 메시지를 bytes타입으로 encode하여 서버로 send
+        clientSocket.sendall(option.encode())  # String타입 메시지를 bytes타입으로 encode하여 서버로 send
 
     elif option == '4':
         infos = input("write: connect [ip] [port]")
